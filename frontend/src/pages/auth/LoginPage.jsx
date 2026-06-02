@@ -32,7 +32,8 @@ const LoginPage = () => {
       else navigate('/student/dashboard');
     } catch (err) {
       clearTimeout(wakeTimer);
-      setError(err.response?.data?.message || 'Login failed. Server may be waking up — please try again.');
+      const msg = err.response?.data?.message;
+      setError(msg || (err.code === 'ECONNABORTED' ? 'Server is still waking up — please try again in a few seconds.' : 'Login failed. Please try again.'));
     } finally {
       setLoading(false);
       setWakingUp(false);

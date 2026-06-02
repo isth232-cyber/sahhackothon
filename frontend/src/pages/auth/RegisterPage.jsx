@@ -37,7 +37,8 @@ const RegisterPage = () => {
       else navigate('/student/dashboard');
     } catch (err) {
       clearTimeout(wakeTimer);
-      setError(err.response?.data?.message || 'Registration failed. The server may still be waking up — please try again in a few seconds.');
+      const msg = err.response?.data?.message;
+      setError(msg || (err.code === 'ECONNABORTED' ? 'Server is still waking up — please try again in a few seconds.' : 'Registration failed. Please try again.'));
     } finally {
       setLoading(false);
       setWakingUp(false);

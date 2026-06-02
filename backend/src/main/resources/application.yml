@@ -28,7 +28,7 @@ app:
     secret: ${APP_JWT_SECRET:${JWT_SECRET:dev-jwt-secret-dev-jwt-secret-dev-jwt-secret}}
     expiration-ms: 86400000 # 24 hours
   cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000}
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,https://*.vercel.app}
   ai:
     provider: ${AI_PROVIDER:mock}   # set to 'gemini' to use real AI
     gemini:

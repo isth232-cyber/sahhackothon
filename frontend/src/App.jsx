@@ -25,6 +25,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import TranslatePage from './pages/student/TranslatePage';
 import FLNLearningHub from './pages/student/FLNLearningHub';
 import StudentQuizPage from './pages/student/StudentQuizPage';
+import QuizCreatorPage from './pages/teacher/QuizCreatorPage';
 import PlaceholderPage from './pages/PlaceholderPage';
 
 function App() {
@@ -49,7 +50,7 @@ function App() {
                 <Route path="dashboard" element={<TeacherDashboard />} />
                 <Route path="classrooms" element={<ClassroomManagerPage />} />
                 <Route path="lessons" element={<LessonManagerPage />} />
-                <Route path="quizzes" element={<PlaceholderPage title="Quiz Creator" description="Create quizzes with multiple-choice questions. Backend APIs: CRUD /api/quizzes" />} />
+                <Route path="quizzes" element={<QuizCreatorPage />} />
                 <Route path="attendance" element={<AttendanceManagerPage />} />
                 <Route path="participation" element={<ParticipationDashboardPage />} />
                 <Route path="insights" element={<AIInsightsPage />} />

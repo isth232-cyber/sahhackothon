@@ -16,12 +16,20 @@ import java.security.SecureRandom;
 @Service
 public class MockAIServiceImpl implements AIProvider {
 
-    private static final Map<String, String> MOCK_TRANSLATIONS = Map.of(
-        "Hindi", "यह एक अनुवादित पाठ है। मूल सामग्री को हिंदी में रूपांतरित किया गया है।",
-        "Tamil", "இது மொழிபெயர்க்கப்பட்ட உரை. அசல் உள்ளடக்கம் தமிழில் மாற்றப்பட்டுள்ளது.",
-        "Telugu", "ఇది అనువదించబడిన వచనం. అసలు కంటెంట్ తెలుగులోకి మార్చబడింది.",
-        "Kannada", "ಇದು ಅನುವಾದಿತ ಪಠ್ಯ. ಮೂಲ ವಿಷಯವನ್ನು ಕನ್ನಡಕ್ಕೆ ಪರಿವರ್ತಿಸಲಾಗಿದೆ.",
-        "Malayalam", "ഇത് വിവർത്തനം ചെയ്ത വാചകമാണ്. യഥാർത്ഥ ഉള്ളടക്കം മലയാളത്തിലേക്ക് പരിവർത്തനം ചെയ്തു."
+    private static final Map<String, String> LANG_LABELS = Map.of(
+        "Hindi", "हिंदी",
+        "Tamil", "தமிழ்",
+        "Telugu", "తెలుగు",
+        "Kannada", "ಕನ್ನಡ",
+        "Malayalam", "മലയാളം"
+    );
+
+    private static final Map<String, String> LANG_NOTICE = Map.of(
+        "Hindi", "[हिंदी अनुवाद]",
+        "Tamil", "[தமிழ் மொழிபெயர்ப்பு]",
+        "Telugu", "[తెలుగు అనువాదం]",
+        "Kannada", "[ಕನ್ನಡ ಅನುವಾದ]",
+        "Malayalam", "[മലയാളം വിവർത്തനം]"
     );
 
     private static final String[] RECOMMENDATIONS = {
@@ -40,11 +48,13 @@ public class MockAIServiceImpl implements AIProvider {
         if (text == null || text.isBlank()) {
             throw new IllegalArgumentException("text must not be null or blank");
         }
-        String translated = MOCK_TRANSLATIONS.getOrDefault(targetLanguage,
-                "[Mock Translation to " + targetLanguage + "] " + text);
-
+        String translated;
         if ("English".equalsIgnoreCase(targetLanguage)) {
             translated = text;
+        } else {
+            String notice = LANG_NOTICE.getOrDefault(targetLanguage,
+                    "[" + targetLanguage + " translation]");
+            translated = notice + " " + text;
         }
 
         return TranslateResponse.builder()

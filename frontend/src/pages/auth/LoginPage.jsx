@@ -13,6 +13,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [wakingUp, setWakingUp] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -20,16 +21,21 @@ const LoginPage = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
+    setWakingUp(false);
+    const wakeTimer = setTimeout(() => setWakingUp(true), 4000);
     try {
       const data = await login(email, password);
+      clearTimeout(wakeTimer);
       const role = data.role;
       if (role === 'ROLE_ADMIN') navigate('/admin/dashboard');
       else if (role === 'ROLE_TEACHER') navigate('/teacher/dashboard');
       else navigate('/student/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
+      clearTimeout(wakeTimer);
+      setError(err.response?.data?.message || 'Login failed. Server may be waking up — please try again.');
     } finally {
       setLoading(false);
+      setWakingUp(false);
     }
   };
 
@@ -79,6 +85,12 @@ const LoginPage = () => {
           </Box>
 
           {error && <Alert severity="error" sx={{ mb: 2, borderRadius: '10px' }}>{error}</Alert>}
+
+          {wakingUp && (
+            <Alert severity="info" sx={{ mb: 2, borderRadius: '10px', fontSize: '0.8rem' }}>
+              ⏳ Server is waking up (free tier) — this takes 30–60 seconds on first use. Please wait...
+            </Alert>
+          )}
 
           <form onSubmit={handleSubmit}>
             <TextField

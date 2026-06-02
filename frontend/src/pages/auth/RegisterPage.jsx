@@ -14,6 +14,7 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [wakingUp, setWakingUp] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -25,16 +26,21 @@ const RegisterPage = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
+    setWakingUp(false);
+    const wakeTimer = setTimeout(() => setWakingUp(true), 4000);
     try {
       const data = await register(formData);
+      clearTimeout(wakeTimer);
       const role = data.role;
       if (role === 'ROLE_ADMIN') navigate('/admin/dashboard');
       else if (role === 'ROLE_TEACHER') navigate('/teacher/dashboard');
       else navigate('/student/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      clearTimeout(wakeTimer);
+      setError(err.response?.data?.message || 'Registration failed. The server may still be waking up — please try again in a few seconds.');
     } finally {
       setLoading(false);
+      setWakingUp(false);
     }
   };
 
@@ -107,6 +113,11 @@ const RegisterPage = () => {
               </FormControl>
             </Box>
 
+            {wakingUp && (
+              <Alert severity="info" sx={{ mb: 2, borderRadius: '10px', fontSize: '0.8rem' }}>
+                ⏳ Server is waking up (free tier) — this takes 30–60 seconds on first request. Please wait...
+              </Alert>
+            )}
             <Button type="submit" fullWidth variant="contained" size="large" disabled={loading}
               sx={{ py: 1.5, borderRadius: '12px', fontSize: '1rem', fontWeight: 700, background: 'linear-gradient(135deg, #4F46E5, #6366F1)' }}
             >
